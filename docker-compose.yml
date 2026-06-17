@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  discovery-service:
+    build: ./discovery-service
+    container_name: discovery-service
+    ports:
+      - "8761:8761"
+    networks:
+      - red-eureka
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  inventory-service:
+    build: ./inventory-service
+    #container_name: inventory-service   # Hay 3 replicas (intancias) y cada contenedor requiere un nombre unico
+    #ports:                              # No se expone un puerto fijo con varias instancias, eureka se comunicará por la red interna
+    #  - "8082:8082"
+    environment:
+      - EUREKA_URI=http://discovery-service:8761/eureka/
+    depends_on:
+      - discovery-service
+    networks:
+      - red-eureka
+    deploy:
+      replicas: 3
+
+  product-service:
+    build: ./product-service
+    container_name: product-service
+    ports:
+      - "8081:8081"
+    environment:
+      - EUREKA_URI=http://discovery-service:8761/eureka/
+    depends_on:
+      - discovery-service
+    networks:
+      - red-eureka
+networks:
+  red-eureka:
+    driver: bridge
