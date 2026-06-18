@@ -25,7 +25,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-    implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer' //ya está implicita no es necesario anotarla
+    implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'//ya está implicita no es necesario anotarla
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 dependencyManagement {
