@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
         configuration = CustomLoadBalancerConfig.class) // Por defecto Round Robin, lo cambiamos por personalizado
 public interface InventoryClient {
 
-    @GetMapping("/api/inventory/{product}")
+    @GetMapping("/api/inventory/stock/{product}")
     boolean isInStock(@PathVariable("product") String product);
 }
