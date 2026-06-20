@@ -14,11 +14,23 @@ services:
       timeout: 5s
       retries: 5
 
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - EUREKA_URI=http://discovery-service:8761/eureka/
+    depends_on:
+      - inventory-service
+    networks:
+      - red-eureka
+
   inventory-service:
     build: ./inventory-service
     #container_name: inventory-service   # Hay 3 replicas (intancias) y cada contenedor requiere un nombre unico
-    ports:                               # No se expone un puerto fijo con varias instancias, eureka se comunicará por la red interna
-      - "8082"                           # Un solo puerto para que docker lo asigne uno aleatorio a cada instancia
+    #ports:                               # No se expone un puerto fijo con varias instancias, eureka se comunicará por la red interna
+    #  - "8082"                           # Un solo puerto para que docker lo asigne uno aleatorio a cada instancia (cuando no hay api-gateway)
     environment:
       - EUREKA_URI=http://discovery-service:8761/eureka/
     depends_on:
@@ -31,8 +43,8 @@ services:
   product-service:
     build: ./product-service
     #container_name: product-service
-    ports:
-      - "8081"
+    #ports:
+    #  - "8081"
     environment:
       - EUREKA_URI=http://discovery-service:8761/eureka/
     depends_on:
